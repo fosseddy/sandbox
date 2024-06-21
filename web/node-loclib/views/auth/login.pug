@@ -1,0 +1,28 @@
+extends /base
+
+block content
+    h1 Login
+
+    form(method="POST" action="/login")
+        div.form-control
+            if form.errors.username
+                ul: li= form.errors.username
+            input(
+                name="username"
+                placeholder="Username..."
+                value=form.username
+            )
+
+        div.form-control
+            if form.errors.password
+                ul: li= form.errors.password
+            input(
+                type="password"
+                name="password"
+                placeholder="Password..."
+                value=form.password
+            )
+
+        div.login-form-actions
+            button.form-submit.mr-2(type="submit") Login
+            a(href="/register") Register

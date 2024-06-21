@@ -1,0 +1,9 @@
+extends /base
+
+block content
+    h1 Author: #{author.name}
+    p Do you really want to delete this author?
+
+    form(method="POST")
+        input(type="hidden" name="id" value=author.id)
+        button.form-submit(type="submit") Delete

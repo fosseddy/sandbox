@@ -1,0 +1,18 @@
+extends /base
+
+block content
+    h1 Local Library Home
+    p.
+        Welcome to #[em LocalLibrary], a very basic PHP Symfony website
+        developed as a practice exercise to learn the framework.
+
+    section
+        h2 Dynamic content
+
+        p The library has the following record counts:
+
+        ul
+            li #[strong Books:] 1</li>
+            li #[strong Authors:] #{counts.author}</li>
+            li #[strong Genres:] #{counts.genre}</li>
+            li #[strong Users:] 4</li>

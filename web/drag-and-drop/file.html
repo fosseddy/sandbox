@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Drag and Drop File</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .box {
+            border: 1px solid black;
+            width: 140px;
+            height: 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .box-content {
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div style="display: flex; flex-direction: column; margin: 2rem 0;">
+        <div class="box">
+            <div class="box-content">
+                <p>Drag file in here</p>
+            </div>
+        </div>
+        <p id="file-content"></p>
+    </div>
+
+    <script>
+        const box = document.querySelector(".box");
+        const fileContent = document.querySelector("#file-content");
+
+        box.addEventListener("dragover", event => event.preventDefault());
+
+        box.addEventListener("drop", async event => {
+            event.preventDefault();
+
+            const f = event.dataTransfer.files[0];
+            if (!f) return;
+
+            try {
+                const text = await f.text();
+                fileContent.innerText = text;
+            } catch {
+                fileContent.innerText = "Please, provide a valid file";
+            }
+        });
+    </script>
+</body>
+</html>

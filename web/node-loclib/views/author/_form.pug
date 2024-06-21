@@ -1,0 +1,22 @@
+h1 Author Form
+
+form(method="POST")
+    div.form-control
+        if form.errors.name
+            ul: li= form.errors.name
+
+        input(placeholder="Firstname Lastname..." name="name" value=form.name)
+
+    div.form-control
+        if form.errors.date_of_birth
+            ul: li= form.errors.date_of_birth
+
+        input(type="date" name="date_of_birth" value=form.date_of_birth)
+
+    div.form-control
+        if form.errors.date_of_death
+            ul: li= form.errors.date_of_death
+
+        input(type="date" name="date_of_death" value=form.date_of_death)
+
+    button.form-submit(type="submit") Submit

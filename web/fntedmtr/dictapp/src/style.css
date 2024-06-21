@@ -1,0 +1,43 @@
+*,
+*::after,
+*::before {
+    box-sizing: border-box;
+}
+
+svg {
+    display: block;
+}
+
+input,
+label,
+select,
+textarea,
+button,
+fieldset,
+legend,
+datalist,
+output,
+option,
+optgroup {
+    font: inherit;
+    color: inherit;
+}
+
+body {
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+}
+
+hr {
+    border: 1px solid var(--color-accent);
+}
+
+#app {
+    max-width: 43rem;
+    margin: 0 auto;
+}
+
+/* DEBUG */
+.dbg-r {
+    outline: solid red;
+}

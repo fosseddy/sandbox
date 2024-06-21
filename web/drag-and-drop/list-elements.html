@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Drag and Drop List Elements</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .list {
+            border: 1px solid black;
+            list-style: none;
+            padding: 10px 20px;
+        }
+        .list__item {
+            min-width: 100px;
+            border: 1px solid red;
+            padding: 10px 20px;
+            cursor: grab;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        .list__item:last-child {
+            margin-bottom: 0;
+        }
+        .list__item * {
+            pointer-events: none;
+        }
+        .list__item--placeholder {
+            opacity: 0.3;
+            background-color: red;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <ul class="list"></ul>
+
+    <script>
+        const values = ["Hello", "World", "How", "Are", "You"];
+        document.querySelector(".list")
+            .innerHTML = values.reduce((acc, val, i) => acc += `
+                <li class="list__item" data-item-index="${i}" draggable="true">
+                    <p>${val}</p>
+                </li>
+            `, "");
+
+        let draggedItem = null;
+        document.querySelectorAll(".list__item").forEach(item => {
+            item.addEventListener("dragstart", event => {
+                draggedItem = event.target;
+                event.dataTransfer.effectAllowed = "move";
+            });
+
+            item.addEventListener("drag", event => {
+                draggedItem.classList.add("list__item--placeholder");
+            });
+
+            item.addEventListener("dragend", () => {
+                draggedItem.classList.remove("list__item--placeholder");
+                draggedItem = null;
+            });
+
+            item.addEventListener("dragover", event => {
+                console.assert(draggedItem !== null);
+                event.preventDefault();
+
+                const hoveredItem = event.target;
+                const draggedId = parseInt(draggedItem.dataset.itemIndex);
+                const hoveredId = parseInt(hoveredItem.dataset.itemIndex);
+
+                if (draggedId === hoveredId) return;
+
+                const diff = draggedId - hoveredId;
+
+                if (diff > 0) {
+                    hoveredItem.before(draggedItem);
+                } else {
+                    hoveredItem.after(draggedItem);
+                }
+
+                hoveredItem.setAttribute("data-item-index", draggedId);
+                draggedItem.setAttribute("data-item-index", hoveredId);
+            });
+
+            item.addEventListener("drop", event => {
+                event.preventDefault();
+            });
+        });
+    </script>
+</body>
+</html>

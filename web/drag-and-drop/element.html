@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Drag and Drop Element</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .box {
+            border: 1px solid black;
+            width: 140px;
+            height: 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-right: 2rem;
+        }
+        .box:last-child {
+            margin-right: 0;
+        }
+        .box-content {
+            border: 1px solid red;
+            padding: 10px;
+            cursor: grab;
+        }
+    </style>
+</head>
+<body>
+    <div style="display: flex; margin: 2rem 0;">
+        <div class="box">
+            <div id="drag-item" class="box-content" draggable="true">
+                <p>Hello,World!</p>
+            </div>
+        </div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+    </div>
+
+    <script>
+        const boxes = document.querySelectorAll(".box");
+        const dragItem = document.querySelector("#drag-item");
+
+        boxes.forEach(box => {
+            box.addEventListener("dragover", event => {
+                if (box.contains(dragItem)) return;
+                event.preventDefault();
+            });
+
+            box.addEventListener("drop", event => {
+                event.preventDefault();
+
+                if (box.contains(dragItem)) return;
+                box.style.border = "1px solid black";
+                box.appendChild(dragItem);
+            });
+
+            box.addEventListener("dragenter", () => {
+                if (box.contains(dragItem)) return;
+                box.style.border = "5px solid blue";
+            });
+
+            box.addEventListener("dragleave", () => {
+                if (box.contains(dragItem)) return;
+                box.style.border = "1px solid black";
+            });
+        });
+
+        dragItem.addEventListener("dragstart", event => {
+            dragItem.style.opacity = 0.2;
+            event.dataTransfer.effectAllowed = "move";
+        });
+
+        dragItem.addEventListener("dragend", () => {
+            dragItem.style.opacity = 1;
+        });
+    </script>
+</body>
+</html>

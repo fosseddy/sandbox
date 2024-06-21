@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Image Carousel</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        button {
+            border: none;
+            background: none;
+            font-size: 32px;
+            font-weight: bold;
+            position: absolute;
+            cursor: pointer;
+            color: white;
+            background-color: black;
+            padding: 5px;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            opacity: .3;
+            transition: all .5s ease-out;
+        }
+
+        button:hover {
+            opacity: 1;
+        }
+
+        ol {
+            width: 100%;
+            position: absolute;
+            list-style: none;
+            bottom: 3%;
+            display: flex;
+            justify-content: center;
+        }
+
+        li {
+            color: white;
+            background-color: black;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            margin-right: 5px;
+            cursor: pointer;
+            opacity: .3;
+        }
+
+        li:last-child {
+            margin-right: 0;
+        }
+
+        li:hover {
+            opacity: 1;
+        }
+
+        li.active {
+            opacity: 1;
+            border: 4px solid black;
+            background-color: white;
+        }
+
+        .carousel-container {
+            position: relative;
+            width: 600px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .carousel-imgs {
+            display: flex;
+            transition: all .5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="carousel-container">
+        <div class="carousel-imgs">
+            <img src="https://picsum.photos/600/400?random=1" />
+            <img src="https://picsum.photos/600/400?random=2" />
+            <img src="https://picsum.photos/600/400?random=3" />
+            <img src="https://picsum.photos/600/400?random=4" />
+        </div>
+
+        <ol id="carousel-controls">
+        </ol>
+
+        <button id="btn-prev" style="left: 5%"><</button>
+        <button id="btn-next" style="right: 5%">></button>
+    </div>
+
+    <script>
+        const carouselControls = document.querySelector("#carousel-controls");
+        const images = document.querySelectorAll(".carousel-imgs img");
+
+        for  (let i = 0; i < images.length; i++) {
+            carouselControls.innerHTML += `
+                <li ${i == 0 ? 'class="active"' : ""}></li>
+            `;
+        }
+
+        const dots = carouselControls.querySelectorAll("li");
+        const imagesContainer = document.querySelector(".carousel-imgs");
+
+        const imageWidth = 600;
+        const firstImageOffset = 0;
+        const lastImageOffset = imageWidth * (images.length - 1) * -1;
+
+        let offset = firstImageOffset;
+        let activeIndex = 0;
+
+        dots.forEach((li, i) => {
+            li.addEventListener("click", () => {
+                offset = imageWidth * i * -1;
+                imagesContainer.style.transform = `translateX(${offset}px)`;
+                dots[activeIndex].classList.remove("active");
+                dots[i].classList.add("active");
+                activeIndex = i;
+            });
+        });
+
+        document.querySelector("#btn-next").addEventListener("click", () => {
+            dots[activeIndex].classList.remove("active");
+            offset -= imageWidth;
+            activeIndex += 1;
+            if (offset < lastImageOffset) {
+                offset = firstImageOffset;
+                activeIndex = 0;
+            }
+            imagesContainer.style.transform = `translateX(${offset}px)`;
+            dots[activeIndex].classList.add("active");
+        });
+
+        document.querySelector("#btn-prev").addEventListener("click", () => {
+            dots[activeIndex].classList.remove("active");
+            offset += imageWidth;
+            activeIndex -= 1;
+            if (offset > firstImageOffset) {
+                offset = lastImageOffset;
+                activeIndex = images.length - 1;
+            }
+            imagesContainer.style.transform = `translateX(${offset}px)`;
+            dots[activeIndex].classList.add("active");
+        });
+    </script>
+</body>
+</html>

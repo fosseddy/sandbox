@@ -1,0 +1,11 @@
+extends /base
+
+block content
+    h1 Genre: #{genre.name}
+
+    hr
+
+    ul.entity__actions
+        li: a(href=`/catalog/genre/${genre.id}/delete`) Delete
+        li: a(href=`/catalog/genre/${genre.id}/update`) Update
+    </ul>

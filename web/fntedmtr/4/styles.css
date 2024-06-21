@@ -1,0 +1,144 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap");
+
+:root {
+  /* dark blue */
+  --color-primary-3: hsl(219, 30%, 18%); /* testimonial */
+  --color-primary-4: hsl(217, 28%, 15%); /* intro, email */
+  --color-primary-5: hsl(218, 28%, 13%); /* main bg */
+  --color-primary-7: hsl(216, 53%, 9%);  /* footer */
+
+  --color-accent-a: hsl(176, 68%, 64%);  /* cyan */
+  --color-accent-b: hsl(198, 60%, 50%);  /* blue */
+
+  --color-neutral-a: hsl(0, 0%, 100%);   /* white */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  min-height: 100%;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+h1, h2, button, header ul {
+  font-family: "Raleway", sans-serif;
+}
+
+h1, h2, p {
+  margin: 1em 0;
+}
+
+h1, h2 {
+  line-height: 1.5;
+  font-size: 1.5rem;
+}
+
+p, button {
+  font-size: .93rem;
+}
+
+button {
+  cursor: pointer;
+  display: block;
+  border: none;
+  color: var(--color-neutral-a);
+  font-weight: bold;
+  padding: 1em 6em;
+  border-radius: 50px;
+  background: linear-gradient(to right,
+                              var(--color-accent-a),
+                              var(--color-accent-b));
+}
+
+body {
+  background-color: var(--color-primary-5);
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  color: var(--color-neutral-a);
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 1100px;
+  padding: 0 2rem;
+}
+
+.logo {
+  max-width: 30%;
+}
+
+.header {
+  padding: 2rem 0;
+}
+
+.header__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav {
+  width: min(60%, 250px);
+}
+
+.nav__list {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 5rem;
+}
+
+.hero__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero__image {
+  width: min(80%, 400px);
+}
+
+.hero__heading {
+  margin-bottom: 0;
+}
+
+.grid {
+  text-align: center;
+}
+
+.grid__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5rem;
+}
+
+.grid__item img {
+  max-width: 20%;
+}
+
+.grid__item:not(:last-child) {
+  border: 1px solid red;
+}

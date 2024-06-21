@@ -1,0 +1,9 @@
+extends /base
+
+block content
+    h1 Genre: #{genre.name}
+    p Do you really want to delete this genre?
+
+    form(method="POST")
+        input(type="hidden" name="id" value=genre.id)
+        button.form-submit(type="submit") Delete

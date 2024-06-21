@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Number Encodings</title>
+</head>
+<body>
+    <form>
+        <label>Unsigned <input id="uint-input"></label>
+        <label>Signed <input id="sint-input"></label>
+        <label>Hex <input id="hex-input"></label>
+        <label>Binary <input id="bin-input"></label>
+        <label>Octal <input id="oct-input"></label>
+    </form>
+
+    <div class="bitsize">
+        <button id="bitsize-8">8</button>
+        <button id="bitsize-16">16</button>
+        <button id="bitsize-32">32</button>
+        <button id="bitsize-64">64</button>
+    </div>
+
+    <div class="info">
+        <div class="info-container">
+            <div class="info-item">
+                <p>Decimal</p>
+                <p id="uint-info"></p>
+                <p id="sint-info"></p>
+            </div>
+
+            <div class="info-item">
+                <p>Hex</p>
+                <p id="hex-info"></p>
+            </div>
+
+            <div class="info-item">
+                <p>Binary</p>
+                <p id="bin-info"></p>
+            </div>
+
+            <div class="info-item">
+                <p>Octal</p>
+                <p id="oct-info"></p>
+            <div>
+        </div>
+    </div>
+
+    <script src="integers.js"></script>
+</body>
+</html>

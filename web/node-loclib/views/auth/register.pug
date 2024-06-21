@@ -1,0 +1,26 @@
+extends /base
+
+block content
+    h1 Register
+
+    form(method="POST")
+        div.form-control
+            if form.errors.username
+                ul: li= form.errors.username
+            input(
+                name="username"
+                placeholder="Username..."
+                value=form.username
+            )
+
+        div.form-control
+            if form.errors.password
+                ul: li= form.errors.password
+            input(
+                type="password"
+                name="password"
+                placeholder="Password..."
+                value=form.password
+            )
+
+        button.form-submit(type="submit") Submit

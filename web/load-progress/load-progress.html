@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Progress</title>
+</head>
+<body>
+    <div>
+        <h1>Progress</h1>
+        <progress value="0" max="100"></progress>
+        <pre id="data"></pre>
+    </div>
+
+    <script type="module">
+        const progress = document.querySelector("progress");
+        const pre = document.querySelector("#data");
+
+        const res = await fetch("http://localhost:5000/load");
+
+        const r = res.body.getReader();
+        const contentLength = res.headers.get("content-length");
+        console.assert(contentLength);
+        const chunks = [];
+        let received = 0;
+
+        for (;;) {
+            const { value, done } = await r.read();
+            if (done) break;
+            chunks.push(value);
+            received += value.length;
+            progress.value = Math.floor(received / contentLength * 100);
+        }
+
+        const data = new Uint8Array(contentLength);
+        let offset = 0;
+        for (const c of chunks) {
+            data.set(c, offset);
+            offset += c.length;
+        }
+
+        pre.textContent = new TextDecoder().decode(data);
+    </script>
+</body>
+</html>

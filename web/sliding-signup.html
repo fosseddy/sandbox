@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sliding Sign Up</title>
+  <style>
+    :root {
+      --color-primary: coral;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body { height: 100%; }
+
+    button {
+      cursor: pointer;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-image: url("https://images.unsplash.com/photo-1533371452382-d45a9da51ad9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1473&q=80");
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    .container {
+      position: relative;
+      width: 800px;
+      height: 400px;
+      color: white;
+      background-color: rgba(0, 0, 0, .8);
+    }
+
+    .floating {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+
+    .moving-block {
+      background-color: white;
+      box-shadow: 0px 0px 10px black;
+      top: -10%;
+      bottom: -10%;
+      right: 50%;
+      transform: translateX(10%);
+    }
+
+    .content {
+      padding: 2rem 4rem;
+      z-index: 2;
+    }
+
+    .form {
+      color: var(--color-primary);
+      padding: 2rem 4rem;
+      z-index: 2;
+    }
+
+    .form button {
+      background-color: var(--color-primary);
+      color: white;
+      border: none;
+      padding: .5rem 3rem;
+      border-radius: 5px;
+      margin-top: 2rem;
+    }
+
+    .lhs-content, .lhs-form {
+      right: 50%;
+    }
+
+    .rhs-content, .rhs-form {
+      left: 50%;
+    }
+
+    .display-none {
+      display: none;
+    }
+
+    .slide-right {
+      animation: slide-right .5s ease-out forwards;
+    }
+
+    .slide-left {
+      animation: slide-left .5s ease-out forwards;
+    }
+
+    @keyframes slide-right {
+      0% { transform: translateX(0); }
+      40% { transform: translateX(100%); }
+      60% { transform: translateX(85%); }
+      100% { transform: translateX(90%); }
+    }
+
+    @keyframes slide-left {
+      0% { transform: translateX(90%); }
+      40% { transform: translateX(0); }
+      60% { transform: translateX(15%); }
+      100% { transform: translateX(10%); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="display-none floating content lhs-content">
+      <h1>Don't have an account?</h1>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.
+      </p>
+      <button>Sign up</button>
+    </div>
+
+    <div class="floating form lhs-form">
+      <h1>Sign Up</h1>
+      <form>
+        <div>
+          <input type="text" placeholder="Full Name" />
+        </div>
+        <div>
+          <input type="text" placeholder="Email" />
+        </div>
+        <div>
+          <input type="text" placeholder="Password" />
+        </div>
+        <button type="submit">Sign Up</button>
+      </form>
+    </div>
+
+    <div class="floating content rhs-content">
+      <h1>Have an account?</h1>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.
+      </p>
+      <button>Login</button>
+    </div>
+
+    <div class="display-none floating form rhs-form">
+      <h1>Login</h1>
+      <form>
+        <div>
+          <input type="text" placeholder="Email" />
+        </div>
+        <div>
+          <input type="text" placeholder="Password" />
+        </div>
+        <button type="submit">Login</button>
+      </form>
+    </div>
+
+    <div class="floating moving-block"></div>
+  </div>
+
+  <script>
+    const login = {
+      content: document.querySelector(".rhs-content"),
+      form: document.querySelector(".rhs-form")
+    };
+
+    const signup = {
+      content: document.querySelector(".lhs-content"),
+      form: document.querySelector(".lhs-form")
+    };
+
+    const block = document.querySelector(".moving-block");
+
+    login.content.querySelector("button").addEventListener("click", () => {
+      login.content.classList.add("display-none");
+      signup.form.classList.add("display-none");
+
+      login.form.classList.remove("display-none");
+      signup.content.classList.remove("display-none");
+
+      block.classList.remove("slide-left");
+      block.classList.add("slide-right");
+    });
+
+    signup.content.querySelector("button").addEventListener("click", () => {
+      signup.content.classList.add("display-none");
+      login.form.classList.add("display-none");
+
+      signup.form.classList.remove("display-none");
+      login.content.classList.remove("display-none");
+
+      block.classList.remove("slide-right");
+      block.classList.add("slide-left");
+    });
+  </script>
+</body>
+</html>

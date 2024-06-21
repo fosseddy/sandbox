@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Counter Animation</title>
+</head>
+<body>
+  <div>
+    <p class="counter" data-value="225">0</p>
+    <p class="counter" data-value="340">0</p>
+    <p class="counter" data-value="400">0</p>
+    <p class="counter" data-value="280">0</p>
+  </div>
+
+  <script>
+    const TIMER_DURATION = 2000;
+
+    const counters = document.querySelectorAll(".counter");
+    console.assert(counters.length);
+
+    for (const counter of counters.values()) {
+      const endValue = parseInt(counter.dataset.value);
+      console.assert(!isNaN(endValue));
+      let startValue = 0;
+
+      const interval = setInterval(() => {
+        startValue += 1;
+        counter.textContent = startValue;
+
+        if (startValue >= endValue) clearInterval(interval);
+      }, TIMER_DURATION / endValue);
+    }
+  </script>
+</body>
+</html>

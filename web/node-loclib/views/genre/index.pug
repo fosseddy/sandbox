@@ -1,0 +1,11 @@
+extends /base
+
+block content
+    h1 Genre List
+
+    if genres.length
+        ul
+            each genre in genres
+                li: a(href=`/catalog/genre/${genre.id}`)= genre.name
+    else
+        p There are no genres.

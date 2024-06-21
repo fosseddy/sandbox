@@ -1,0 +1,11 @@
+extends /base
+
+block content
+    h1 Author List
+
+    if authors.length
+        ul
+            each author in authors
+                li: a(href=`/catalog/author/${author.id}`)= author.name
+    else
+        p There are no authors.
