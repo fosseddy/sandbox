@@ -1,13 +1,13 @@
 package main
 
 import (
-	"net/http"
 	"encoding/json"
 	"log"
+	"net/http"
 )
 
 type ErrParam struct {
-	Param string `json:"param"`
+	Param   string `json:"param"`
 	Message string `json:"message"`
 }
 
@@ -27,7 +27,7 @@ func writeError(w http.ResponseWriter, status int, param string, message string)
 
 	if res, err := json.Marshal(&er); err != nil {
 		w.WriteHeader(500)
-		log.Println("writeError: json encoding failed:", err)	
+		log.Println("writeError: json encoding failed:", err)
 	} else {
 		w.WriteHeader(status)
 		w.Write(res)
@@ -39,7 +39,7 @@ func writeErrors(w http.ResponseWriter, status int, eps ErrParams) {
 
 	if res, err := json.Marshal(&er); err != nil {
 		w.WriteHeader(500)
-		log.Println("writeError: json encoding failed:", err)	
+		log.Println("writeError: json encoding failed:", err)
 	} else {
 		w.WriteHeader(status)
 		w.Write(res)
@@ -52,7 +52,7 @@ func writeServerError(w http.ResponseWriter, err error) {
 }
 
 type DataResponse struct {
-	Data map[string]any `json:"data"`
+	Data any `json:"data"`
 }
 
 type DataArrayResponse struct {
@@ -63,12 +63,12 @@ type DataArray struct {
 	Items []any `json:"items"`
 }
 
-func writeData(w http.ResponseWriter, status int, data map[string]any) {
+func writeData(w http.ResponseWriter, status int, data any) {
 	d := DataResponse{data}
 
 	if res, err := json.Marshal(&d); err != nil {
 		w.WriteHeader(500)
-		log.Println("writeData: json encoding failed:", err)	
+		log.Println("writeData: json encoding failed:", err)
 	} else {
 		w.WriteHeader(status)
 		w.Write(res)
@@ -80,7 +80,7 @@ func writeDataArray(w http.ResponseWriter, status int, data DataArray) {
 
 	if res, err := json.Marshal(&da); err != nil {
 		w.WriteHeader(500)
-		log.Println("writeDataArray: json encoding failed:", err)	
+		log.Println("writeDataArray: json encoding failed:", err)
 	} else {
 		w.WriteHeader(status)
 		w.Write(res)

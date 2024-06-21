@@ -1,17 +1,17 @@
 package main
 
 import (
-	"net/http"
 	"encoding/json"
 	"fmt"
 	"io"
+	"net/http"
 	"strings"
 )
 
 func readBody(w http.ResponseWriter, r *http.Request, v any) bool {
 	d := json.NewDecoder(r.Body)
 	if err := d.Decode(v); err != nil {
-		if (err == io.EOF) {
+		if err == io.EOF {
 			writeError(w, 400, "body", "empty body")
 		} else {
 			switch err := err.(type) {
@@ -28,4 +28,3 @@ func readBody(w http.ResponseWriter, r *http.Request, v any) bool {
 	}
 	return true
 }
-

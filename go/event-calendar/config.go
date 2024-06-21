@@ -1,12 +1,12 @@
 package main
 
 import (
-	"os"
 	"fmt"
+	"log"
+	"os"
+	"reflect"
 	"strings"
 	"unsafe"
-	"reflect"
-	"log"
 )
 
 type Config struct {
@@ -63,7 +63,7 @@ func configInit() error {
 		}
 
 		field, found := typeInfo.FieldByName(k)
-		if (!found) {
+		if !found {
 			fmt.Printf("%s:%d: Unknown config key `%s`. Skipping...\n", path, lineNum, k)
 			continue
 		}

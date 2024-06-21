@@ -20,5 +20,5 @@ func main() {
 	adminInit()
 
 	fmt.Printf("Server is listening on port %s\n", config.port)
-	log.Fatal(http.ListenAndServe(":" + config.port, nil))
+	log.Fatal(http.ListenAndServe(":"+config.port, nil))
 }
