@@ -31,7 +31,7 @@ func postLogin(w http.ResponseWriter, r *http.Request) {
 		Password string
 	}
 
-	if !readBody(w, r, &body) {
+	if !withJSONBody(w, r, &body) {
 		return
 	}
 
@@ -89,7 +89,7 @@ func postLogin(w http.ResponseWriter, r *http.Request) {
 func postRefreshToken(w http.ResponseWriter, r *http.Request) {
 	var body struct{ Token string }
 
-	if !readBody(w, r, &body) {
+	if !withJSONBody(w, r, &body) {
 		return
 	}
 
@@ -130,45 +130,45 @@ func postRefreshToken(w http.ResponseWriter, r *http.Request) {
 }
 
 func getProfile(w http.ResponseWriter, r *http.Request) {
-	admin, ok := adminOnly(w, r)
-	if !ok {
+	var admin Admin
+
+	if !withAdmin(w, r, &admin) {
 		return
 	}
 
 	writeData(w, 200, admin)
 }
 
-func adminOnly(w http.ResponseWriter, r *http.Request) (*Admin, bool) {
+func withAdmin(w http.ResponseWriter, r *http.Request, admin *Admin) bool {
 	header := r.Header.Get("Authorization")
 	if header == "" {
 		writeError(w, 401, "header", "authorization header is not set")
-		return nil, false
+		return false
 	}
 
 	parts := strings.Split(header, " ")
 	if len(parts) != 2 {
 		writeError(w, 401, "header", "invalid header")
-		return nil, false
+		return false
 	}
 
 	schema, tok := parts[0], parts[1]
 	if schema != "Bearer" {
 		writeError(w, 401, "header", "invalid schema")
-		return nil, false
+		return false
 	}
 
 	decoded, err := jwtVerify(tok)
 	if err != nil {
 		writeError(w, 401, "header", "invalid token")
-		return nil, false
+		return false
 	}
 
 	if decoded.Kind != "access" {
 		writeError(w, 401, "token", "invalid token kind")
-		return nil, false
+		return false
 	}
 
-	admin := new(Admin)
 	row := database.QueryRow("select id, name from admin where id = ?", decoded.ID)
 	if err := row.Scan(&admin.ID, &admin.Name); err != nil {
 		if err == sql.ErrNoRows {
@@ -176,8 +176,8 @@ func adminOnly(w http.ResponseWriter, r *http.Request) (*Admin, bool) {
 		} else {
 			writeServerError(w, err)
 		}
-		return nil, false
+		return false
 	}
 
-	return admin, true
+	return true
 }

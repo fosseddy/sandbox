@@ -60,7 +60,7 @@ type DataArrayResponse struct {
 }
 
 type DataArray struct {
-	Items []any `json:"items"`
+	Items any `json:"items"`
 }
 
 func writeData(w http.ResponseWriter, status int, data any) {

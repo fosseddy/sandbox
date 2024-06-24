@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func readBody(w http.ResponseWriter, r *http.Request, v any) bool {
+func withJSONBody(w http.ResponseWriter, r *http.Request, v any) bool {
 	d := json.NewDecoder(r.Body)
 	if err := d.Decode(v); err != nil {
 		if err == io.EOF {
