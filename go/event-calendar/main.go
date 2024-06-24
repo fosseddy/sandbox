@@ -18,6 +18,7 @@ func main() {
 	fmt.Printf("Database %s connected...\n", config.dbName)
 
 	adminInit()
+	categoryInit()
 
 	fmt.Printf("Server is listening on port %s\n", config.port)
 	log.Fatal(http.ListenAndServe(":"+config.port, nil))
