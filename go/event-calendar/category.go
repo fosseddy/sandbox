@@ -2,12 +2,15 @@ package main
 
 import (
 	"database/sql"
+	"log"
 	"net/http"
+	"os"
+	"path"
 	"strings"
 )
 
 type Category struct {
-	ID   int    `json:"id"`
+	ID   int    `json:"_id"`
 	Name string `json:"name"`
 }
 
@@ -15,7 +18,7 @@ type CategoryBody struct {
 	Name string
 }
 
-func categoryInit() {
+func initCategory() {
 	http.HandleFunc("GET /api/categories", getCategories)
 	http.HandleFunc("POST /api/category", postCategory)
 	http.HandleFunc("GET /api/category/{id}", getCategory)
@@ -66,12 +69,7 @@ func postCategory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id, err := res.LastInsertId()
-	if err != nil {
-		writeServerError(w, err)
-		return
-	}
-
+	id, _ := res.LastInsertId()
 	writeData(w, 201, id)
 }
 
@@ -116,8 +114,11 @@ func putCategory(w http.ResponseWriter, r *http.Request) {
 }
 
 func deleteCategory(w http.ResponseWriter, r *http.Request) {
-	var admin Admin
-	var cat Category
+	var (
+		admin  Admin
+		cat    Category
+		images []string
+	)
 
 	if !withAdmin(w, r, &admin) {
 		return
@@ -127,11 +128,37 @@ func deleteCategory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO(art): do cascade delete on events, delete events images
+	rows, err := database.Query("select image from event where category_id = ? and image != ''", cat.ID)
+	if err != nil {
+		writeServerError(w, err)
+		return
+	}
+
+	for rows.Next() {
+		var img string
+
+		if err := rows.Scan(&img); err != nil {
+			writeServerError(w, err)
+			return
+		}
+
+		images = append(images, img)
+	}
+
+	if err := rows.Err(); err != nil {
+		writeServerError(w, err)
+		return
+	}
 
 	if _, err := database.Exec("delete from category where id = ?", cat.ID); err != nil {
 		writeServerError(w, err)
 		return
+	}
+
+	for _, img := range images {
+		if err := os.Remove(path.Join(config.uploadDir, img)); err != nil {
+			log.Println(err)
+		}
 	}
 
 	writeData(w, 200, cat.ID)
@@ -141,7 +168,7 @@ func withCategory(w http.ResponseWriter, r *http.Request, cat *Category) bool {
 	row := database.QueryRow("select id, name from category where id = ?", r.PathValue("id"))
 	if err := row.Scan(&cat.ID, &cat.Name); err != nil {
 		if err == sql.ErrNoRows {
-			writeError(w, 404, "id", "Ресурс не найден")
+			writeError(w, 404, "id", "category not found")
 		} else {
 			writeServerError(w, err)
 		}
@@ -160,15 +187,15 @@ func withValidBody(w http.ResponseWriter, r *http.Request, body *CategoryBody, c
 	body.Name = strings.TrimSpace(body.Name)
 	if body.Name == "" {
 		errs = errs.add("name", "Введите название")
-	} else if len(body.Name) > 200 {
-		errs = errs.add("name", "Название не должно превышать 200 символов")
+	} else if len(body.Name) > 100 {
+		errs = errs.add("name", "Название не должно превышать 100 символов")
 	} else {
 		var id int
 		query := "select id from category where name = ?"
 		params := []any{body.Name}
 
 		if cat != nil {
-			query += " and id <> ?"
+			query += " and id != ?"
 			params = append(params, cat.ID)
 		}
 

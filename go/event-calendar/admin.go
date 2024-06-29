@@ -10,7 +10,7 @@ import (
 )
 
 type Admin struct {
-	ID       int    `json:"id"`
+	ID       int    `json:"_id"`
 	Name     string `json:"name"`
 	Password string `json:"-"`
 }
@@ -19,7 +19,7 @@ type Admin struct {
 // then letter, digit or underscore
 var adminNameRegexp = regexp.MustCompile(`^[a-zA-Z]{1}\w{2,29}$`)
 
-func adminInit() {
+func initAdmin() {
 	http.HandleFunc("POST /api/admin/login", postLogin)
 	http.HandleFunc("POST /api/admin/refresh-token", postRefreshToken)
 	http.HandleFunc("GET /api/admin/profile", getProfile)

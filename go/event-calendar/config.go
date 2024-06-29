@@ -10,8 +10,6 @@ import (
 )
 
 type Config struct {
-	tz string
-
 	port string
 
 	dbName string

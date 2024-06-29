@@ -13,7 +13,7 @@ var database *sql.DB
 func databaseInit() error {
 	var err error
 
-	dsn := fmt.Sprintf("%s:%s@/%s", config.dbUser, config.dbPass, config.dbName)
+	dsn := fmt.Sprintf("%s:%s@/%s?parseTime=true", config.dbUser, config.dbPass, config.dbName)
 	database, err = sql.Open("mysql", dsn)
 	if err != nil {
 		return err

@@ -1,3 +1,5 @@
+// TODO(art): during server errors log wtf happened
+
 package main
 
 import (
@@ -17,8 +19,13 @@ func main() {
 
 	fmt.Printf("Database %s connected...\n", config.dbName)
 
-	adminInit()
-	categoryInit()
+	if err := initStatic(); err != nil {
+		log.Fatal(err)
+	}
+
+	initAdmin()
+	initCategory()
+	initEvent()
 
 	fmt.Printf("Server is listening on port %s\n", config.port)
 	log.Fatal(http.ListenAndServe(":"+config.port, nil))
