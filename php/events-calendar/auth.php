@@ -1,10 +1,6 @@
 <?php
 declare(strict_types = 1);
 
-namespace auth;
-use webtok;
-use PDO;
-
 class Admin
 {
     public int $id;
@@ -65,8 +61,10 @@ function generate_webtok(int $admin_id): array // [string, string]
     return [$acc, $ref];
 }
 
-function decode_webtok(string $kind, PDO $db): array // [?Admin, ?webtok\Error]
+function decode_webtok(string $kind): array // [?Admin, ?webtok\Error]
 {
+    global $database;
+
     $tok = $_COOKIE[$kind] ?? "";
 
     if (!$tok)
@@ -86,17 +84,17 @@ function decode_webtok(string $kind, PDO $db): array // [?Admin, ?webtok\Error]
         return [null, null];
     }
 
-    $s = $db->prepare("select id, name from admin where id = ?");
+    $s = $database->prepare("select id, name from admin where id = ?");
     $s->execute([$data["id"]]);
-    $s->setFetchMode(PDO::FETCH_CLASS, "auth\Admin");
+    $s->setFetchMode(PDO::FETCH_CLASS, "Admin");
     $admin = $s->fetch();
 
     return [$admin, null];
 }
 
-function refresh_webtok(PDO $db): ?Admin
+function refresh_webtok(): ?Admin
 {
-    [$admin, $err] = decode_webtok("refresh", $db);
+    [$admin, $err] = decode_webtok("refresh");
 
     if ($err || !$admin)
     {
@@ -132,15 +130,15 @@ function login(int $admin_id): void
     set_cookie($acc, $ref);
 }
 
-function decode_admin(PDO $db): ?Admin
+function decode_admin(): ?Admin
 {
-    [$admin, $err] = decode_webtok("access", $db);
+    [$admin, $err] = decode_webtok("access");
 
     if ($err)
     {
         if ($err->kind === "eat")
         {
-            return refresh_webtok($db);
+            return refresh_webtok();
         }
 
         return null;
@@ -149,18 +147,18 @@ function decode_admin(PDO $db): ?Admin
     return $admin;
 }
 
-function only_admin(PDO $db): void
+function only_admin(): void
 {
-    if (!decode_admin($db))
+    if (!decode_admin())
     {
         header("Location: /auth/login.php");
         exit;
     }
 }
 
-function only_guest(PDO $db): void
+function only_guest(): void
 {
-    if (decode_admin($db))
+    if (decode_admin())
     {
         header("Location: /dashboard.php");
         exit;

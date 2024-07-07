@@ -1,11 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace event;
-use category;
-use PDO;
-
-class Model
+class Event
 {
     public int $id;
     public string $name;
@@ -17,5 +13,5 @@ class Model
 	public string $organizer;
 	public string $image;
 
-    public category\Model $category;
+    public Category $category;
 }

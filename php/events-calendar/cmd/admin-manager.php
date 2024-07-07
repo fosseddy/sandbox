@@ -3,7 +3,7 @@
 declare(strict_types = 1);
 error_reporting(E_ALL ^ E_WARNING);
 
-define("ROOT", __DIR__ . "/..");
+define("ROOT", __DIR__ . "/../");
 
 set_exception_handler(function(Throwable $e) {
     fprintf(STDERR, "%s: %s in %s:%d\nStack trace:\n%s\n",
@@ -12,10 +12,10 @@ set_exception_handler(function(Throwable $e) {
     exit(1);
 });
 
-require_once ROOT . "/lib/env/env.php"; env\read(ROOT . "/.env");
+require_once ROOT . "lib/env/env.php"; env\read(ROOT . ".env");
 
-require_once ROOT . "/src/database.php";
-require_once ROOT . "/src/auth/auth.php";
+require_once ROOT . "database.php";
+require_once ROOT . "auth.php";
 
 function help($fd = STDERR): void
 {
@@ -52,8 +52,9 @@ $argc--;
 switch ($cmd)
 {
 case "list":
-    $db = database\connect();
-    $rows = $db->query("select name from admin");
+    init_database();
+
+    $rows = $database->query("select name from admin");
 
     printf("Admins:\n");
     foreach ($rows as $r)
@@ -73,7 +74,7 @@ case "add":
 
     $name = $argv[0];
     $pass = trim($argv[1]);
-    $errors = auth\validate_credentials($name, $pass);
+    $errors = validate_credentials($name, $pass);
 
     if (isset($errors["name"]))
     {
@@ -89,11 +90,11 @@ case "add":
         exit(1);
     }
 
-    $db = database\connect();
+    init_database();
 
-    $s = $db->prepare("select id from admin where name = ?");
+    $s = $database->prepare("select id from admin where name = ?");
     $s->execute([$name]);
-    $s->setFetchMode(PDO::FETCH_CLASS, "auth\Admin");
+    $s->setFetchMode(PDO::FETCH_CLASS, "Admin");
     $doc = $s->fetch();
 
     if ($doc)
@@ -105,8 +106,9 @@ case "add":
 
     $pass = password_hash($pass, PASSWORD_BCRYPT);
 
-    $s = $db->prepare("insert into admin (name, password) values (?, ?)");
-    $s->execute([$name, $pass]);
+    $database
+        ->prepare("insert into admin (name, password) values (?, ?)")
+        ->execute([$name, $pass]);
 
     printf("Admin %s successfully created\n", $name);
     break;
@@ -120,11 +122,11 @@ case "delete":
     }
 
     $name = $argv[0];
-    $db = database\connect();
+    init_database();
 
-    $s = $db->prepare("select id from admin where name = ?");
+    $s = $database->prepare("select id from admin where name = ?");
     $s->execute([$name]);
-    $s->setFetchMode(PDO::FETCH_CLASS, "auth\Admin");
+    $s->setFetchMode(PDO::FETCH_CLASS, "Admin");
     $doc = $s->fetch();
 
     if (!$doc)
@@ -134,8 +136,9 @@ case "delete":
         exit(1);
     }
 
-    $s = $db->prepare("delete from admin where name = ?");
-    $s->execute([$name]);
+    $database
+        ->prepare("delete from admin where name = ?")
+        ->execute([$name]);
 
     printf("Admin %s successfully deleted\n", $name);
     break;

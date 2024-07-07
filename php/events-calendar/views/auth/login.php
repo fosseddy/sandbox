@@ -1,4 +1,4 @@
-<?php view\render("view/partial-header", ["title" => "Login"]) ?>
+<?php render_view("header", ["title" => "Login"]) ?>
 
 <form method="POST">
     <div class="form-field">
@@ -12,4 +12,4 @@
     <button type="submit">Login</button>
 </form>
 
-<?php view\render("view/partial-footer") ?>
+<?php render_view("footer") ?>

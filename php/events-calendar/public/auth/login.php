@@ -1,17 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-require_once "../../src/errors/errors.php"; errors\setup();
-require_once "../../lib/env/env.php"; env\read("../../.env");
+require_once "../../app.php";
 
-require_once "../../lib/webtok/webtok.php";
-require_once "../../src/database.php";
-require_once "../../src/auth/auth.php";
-require_once "../../src/view/view.php";
-
-$db = database\connect();
-
-auth\only_guest($db);
+only_guest();
 
 switch ($_SERVER["REQUEST_METHOD"])
 {
@@ -19,7 +11,7 @@ case "GET":
     handle_get();
     exit;
 case "POST":
-    handle_post($db);
+    handle_post();
     exit;
 default:
     http_response_code(405);
@@ -29,30 +21,32 @@ default:
 
 function handle_get(): void
 {
-    view\render("auth/view-login", [
+    render_view("auth/login", [
         "name" => "",
         "pass" => "",
         "errors" => []
     ]);
 }
 
-function handle_post(PDO $db): void
+function handle_post(): void
 {
+    global $database;
+
     $name = $_POST["name"] ?? "";
     $pass = $_POST["password"] ?? "";
 
     $name = htmlspecialchars(trim($name));
-    $errors = auth\validate_credentials($name, $pass);
+    $errors = validate_credentials($name, $pass);
 
     if ($errors)
     {
-        view\render("auth/view-login", compact("name", "pass", "errors"));
+        render_view("auth/login", compact("name", "pass", "errors"));
         return;
     }
 
-    $s = $db->prepare("select id, password from admin where name = ?");
+    $s = $database->prepare("select id, password from admin where name = ?");
     $s->execute([$name]);
-    $s->setFetchMode(PDO::FETCH_CLASS, "auth\Admin");
+    $s->setFetchMode(PDO::FETCH_CLASS, "Admin");
     $admin = $s->fetch();
 
     if (!$admin)
@@ -66,10 +60,10 @@ function handle_post(PDO $db): void
 
     if ($errors)
     {
-        view\render("auth/view-login", compact("name", "pass", "errors"));
+        render_view("auth/login", compact("name", "pass", "errors"));
         return;
     }
 
-    auth\login($admin->id);
+    login($admin->id);
     header("Location: /dashboard.php");
 }

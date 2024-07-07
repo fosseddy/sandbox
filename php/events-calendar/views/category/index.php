@@ -1,4 +1,4 @@
-<?php view\render("view/partial-header", ["title" => "Category"]) ?>
+<?php render_view("header", ["title" => "Category"]) ?>
 
 <?php if ($categories): ?>
     <?php foreach ($categories as $cat): ?>
@@ -24,4 +24,4 @@
     <p>There are no categories. <a href="/category/create.php">Create</a></p>
 <?php endif ?>
 
-<?php view\render("view/partial-footer") ?>
+<?php render_view("footer") ?>

@@ -1,4 +1,4 @@
-<?php view\render("view/partial-header", ["title" => "Events"]) ?>
+<?php render_view("header", ["title" => "Events"]) ?>
 
 <?php if ($events): ?>
     <?php foreach ($events as $e): ?>
@@ -14,4 +14,4 @@
     <p>There are no events. <a href="/event/create.php">Create</a></p>
 <?php endif ?>
 
-<?php view\render("view/partial-footer") ?>
+<?php render_view("footer") ?>

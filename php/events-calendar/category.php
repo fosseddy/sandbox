@@ -1,17 +1,16 @@
 <?php
 declare(strict_types = 1);
 
-namespace category;
-use PDO;
-
-class Model
+class Category
 {
     public int $id;
     public string $name;
 }
 
-function validate(PDO $db, string $name, string $id = ""): array
+function validate_category(string $name, string $id = ""): array
 {
+    global $database;
+
     $errors = [];
 
     if (!$name)
@@ -33,7 +32,7 @@ function validate(PDO $db, string $name, string $id = ""): array
             $params[] = $id;
         }
 
-        $s = $db->prepare($sql);
+        $s = $database->prepare($sql);
         $s->execute($params);
 
         if ($s->fetch())

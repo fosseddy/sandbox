@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-require_once "../src/view/view.php";
+require_once "../app.php";
 
 if ($_SERVER["REQUEST_METHOD"] !== "GET")
 {
@@ -10,4 +10,4 @@ if ($_SERVER["REQUEST_METHOD"] !== "GET")
     exit;
 }
 
-view\render("errors/view-error");
+render_view("error");

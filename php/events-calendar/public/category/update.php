@@ -1,14 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-require_once "../../src/errors/errors.php"; errors\setup();
-require_once "../../lib/env/env.php"; env\read("../../.env");
-
-require_once "../../lib/webtok/webtok.php";
-require_once "../../src/database.php";
-require_once "../../src/auth/auth.php";
-require_once "../../src/category/category.php";
-require_once "../../src/view/view.php";
+require_once "../../app.php";
 
 if (!isset($_GET["id"]))
 {
@@ -16,17 +9,15 @@ if (!isset($_GET["id"]))
     exit;
 }
 
-$db = database\connect();
-
-auth\only_admin($db);
+only_admin();
 
 switch ($_SERVER["REQUEST_METHOD"])
 {
 case "GET":
-    handle_get($db);
+    handle_get();
     exit;
 case "POST":
-    handle_post($db);
+    handle_post();
     exit;
 default:
     http_response_code(405);
@@ -34,13 +25,15 @@ default:
     exit;
 }
 
-function handle_get(PDO $db): void
+function handle_get(): void
 {
+    global $database;
+
     $id = $_GET["id"];
 
-    $s = $db->prepare("select id, name from category where id = ?");
+    $s = $database->prepare("select id, name from category where id = ?");
     $s->execute([$id]);
-    $s->setFetchMode(PDO::FETCH_CLASS, "category\Model");
+    $s->setFetchMode(PDO::FETCH_CLASS, "Category");
     $cat = $s->fetch();
 
     if (!$cat)
@@ -49,26 +42,29 @@ function handle_get(PDO $db): void
         return;
     }
 
-    view\render("category/view-update", [
+    render_view("category/update", [
         "name" => $cat->name,
         "errors" => []
     ]);
 }
 
-function handle_post(PDO $db): void
+function handle_post(): void
 {
+    global $database;
+
     $id = $_GET["id"];
     $name = htmlspecialchars(trim($_POST["name"] ?? ""));
-    $errors = category\validate($db, $name, $id);
+    $errors = validate_category($name, $id);
 
     if ($errors)
     {
-        view\render("category/view-update", compact("name", "errors"));
+        render_view("category/update", compact("name", "errors"));
         return;
     }
 
-    $s = $db->prepare("update category set name = ? where id = ?");
-    $s->execute([$name, $id]);
+    $database
+        ->prepare("update category set name = ? where id = ?")
+        ->execute([$name, $id]);
 
     header("Location: /category");
 }

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-require_once "../../src/auth/auth.php";
+require_once "../../app.php";
 
 if ($_SERVER["REQUEST_METHOD"] !== "GET")
 {
@@ -10,5 +10,5 @@ if ($_SERVER["REQUEST_METHOD"] !== "GET")
     exit;
 }
 
-auth\clear_cookie();
+clear_cookie();
 header("Location: /auth/login.php");

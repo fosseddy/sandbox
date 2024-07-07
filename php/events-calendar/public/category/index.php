@@ -1,14 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-require_once "../../src/errors/errors.php"; errors\setup();
-require_once "../../lib/env/env.php"; env\read("../../.env");
-
-require_once "../../lib/webtok/webtok.php";
-require_once "../../src/database.php";
-require_once "../../src/auth/auth.php";
-require_once "../../src/category/category.php";
-require_once "../../src/view/view.php";
+require_once "../../app.php";
 
 if ($_SERVER["REQUEST_METHOD"] !== "GET")
 {
@@ -17,11 +10,10 @@ if ($_SERVER["REQUEST_METHOD"] !== "GET")
     exit;
 }
 
-$db = database\connect();
+only_admin();
 
-auth\only_admin($db);
+$cats = $database
+            ->query("select id, name from category order by id desc")
+            ->fetchAll(PDO::FETCH_CLASS, "Category");
 
-$cats = $db->query("select id, name from category order by id desc")
-           ->fetchAll(PDO::FETCH_CLASS, "category\Model");
-
-view\render("category/view-index", ["categories" => $cats]);
+render_view("category/index", ["categories" => $cats]);
