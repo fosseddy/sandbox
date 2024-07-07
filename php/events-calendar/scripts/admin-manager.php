@@ -3,7 +3,7 @@
 declare(strict_types = 1);
 error_reporting(E_ALL ^ E_WARNING);
 
-define("BASE", __DIR__ . "/../");
+define("ROOT", __DIR__ . "/..");
 
 set_exception_handler(function(Throwable $e) {
     fprintf(STDERR, "%s: %s in %s:%d\nStack trace:\n%s\n",
@@ -12,18 +12,19 @@ set_exception_handler(function(Throwable $e) {
     exit(1);
 });
 
-require_once BASE . "lib/env/env.php"; env\read(BASE . ".env");
+require_once ROOT . "/lib/env/env.php"; env\read(ROOT . "/.env");
 
-require_once BASE . "src/database.php";
-require_once BASE . "src/auth/auth.php";
+require_once ROOT . "/src/database.php";
+require_once ROOT . "/src/auth/auth.php";
 
 function help($fd = STDERR): void
 {
-    fprintf($fd, "Usage: admin-manager.php [COMMAND]
+    fprintf($fd, "Usage: admin-manager.php <COMMAND>
 COMMAND:
     list                  list all admins
-    add [NAME] [PASSWORD] create new admin
-    delete [NAME]         delete admin
+    add <NAME> <PASSWORD> create new admin
+    delete <NAME>         delete admin
+    help                  print help
 NAME:
     Name of admin.
     Must be unique.
@@ -45,12 +46,6 @@ if ($argc === 0)
     exit(1);
 }
 
-if (in_array("--help", $argv))
-{
-    help(STDOUT);
-    exit;
-}
-
 $cmd = array_shift($argv);
 $argc--;
 
@@ -67,6 +62,7 @@ case "list":
     }
 
     break;
+
 case "add":
     if ($argc < 2)
     {
@@ -114,6 +110,7 @@ case "add":
 
     printf("Admin %s successfully created\n", $name);
     break;
+
 case "delete":
     if ($argc < 1)
     {
@@ -142,6 +139,12 @@ case "delete":
 
     printf("Admin %s successfully deleted\n", $name);
     break;
+
+case "--help":
+case "help":
+    help(STDOUT);
+    break;
+
 default:
     fprintf(STDERR, "Unknown COMMAND %s\n", $cmd);
     help();
