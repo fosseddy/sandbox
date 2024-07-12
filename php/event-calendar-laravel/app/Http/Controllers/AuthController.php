@@ -27,7 +27,7 @@ class AuthController
         return redirect("/");
     }
 
-    function getLogout(Request $req): RedirectResponse
+    function postLogout(Request $req): RedirectResponse
     {
         Auth::logout();
         $req->session()->invalidate();

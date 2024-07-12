@@ -9,9 +9,11 @@ use App\Http\Controllers\EventController;
 Route::redirect("/", "/event");
 
 Route::controller(AuthController::class)->group(function() {
-    Route::get("/login", "getLogin")->name("login");
-    Route::post("/login", "postLogin");
-    Route::get("/logout", "getLogout");
+    Route::middleware("guest")->group(function() {
+        Route::get("/login", "getLogin")->name("login");
+        Route::post("/login", "postLogin");
+    });
+    Route::post("/logout", "postLogout")->middleware("auth");
 });
 
 Route::controller(CategoryController::class)->group(function() {
