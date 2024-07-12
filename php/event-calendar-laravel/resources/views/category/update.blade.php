@@ -1,13 +1,5 @@
-<div>
-    <h1>Update Category</h1>
+@include("nav")
 
-    <form method="POST">
-        @csrf
+<h1>Update Category</h1>
 
-        <div>
-            <input name="name" placeholder="name" value="{{$form['name']}}">
-            <small style="display:block;">@error("name") {{$message}} @else &nbsp; @enderror</small>
-        </div>
-        <button type="submit">Submit</button>
-    </form>
-</div>
+@include("category.form")

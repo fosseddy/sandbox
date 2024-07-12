@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 
@@ -16,15 +17,14 @@ class CategoryController
         return view("category.index", ["categories" => $cats]);
     }
 
-    function getCreate(): View
+    function getCreate(Request $req): View
     {
-        return view("category.create");
+        $form = ["name" => $req->old("name", "")];
+        return view("category.create", ["form" => $form]);
     }
 
     function postCreate(CategoryRequest $req): RedirectResponse
     {
-        $req->validated();
-
         $cat = new Category();
         $cat->name = $req->name;
         $cat->save();
@@ -40,18 +40,22 @@ class CategoryController
 
     function postUpdate(CategoryRequest $req, Category $cat): RedirectResponse
     {
-        $req->validated();
-
         $cat->name = $req->name;
         $cat->save();
 
         return redirect("/category");
     }
 
-    function getDelete(Category $cat): RedirectResponse
+    function postDelete(Category $cat): RedirectResponse
     {
-        // TODO(art): delete events and their images
+        $images = $cat->events->where("image", "!=", "")->pluck("image");
         $cat->delete();
+
+        foreach ($images as $img)
+        {
+            Storage::disk("public")->delete("uploads/$img");
+        }
+
         return redirect("/category");
     }
 }

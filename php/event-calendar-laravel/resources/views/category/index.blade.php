@@ -1,25 +1,20 @@
-<div>
-    <h1>Categories</h1>
+@include("nav")
 
-    <a href="/category/create">Create</a>
+<h1>Categories</h1>
 
-    @foreach ($categories as $cat)
-        <div>
-            {{$cat->name}}
-            <a href="/category/update/{{$cat->id}}">update</a>
-            <a href="/category/delete/{{$cat->id}}">delete</a>
-        </div>
-    @endforeach
-</div>
+<a href="/category/create">Create</a>
 
-<script>
-    for (const a of document.querySelectorAll("a[href*='/category/delete']")) {
-        a.addEventListener("click", (e) => {
-            e.preventDefault();
-            if (window.confirm("Are you sure you want to delete this category?")) {
-                window.location = e.target.href;
-            }
-        });
-    }
-</script>
-
+@foreach ($categories as $cat)
+    <div style="margin-top: 1rem;">
+        {{$cat->name}}
+        <a href="/category/update/{{$cat->id}}">update</a>
+        <form
+            method="POST"
+            action="/category/delete/{{$cat->id}}"
+            style="display: inline-block;"
+        >
+            @csrf
+            <button type="submit">delete</button>
+        </form>
+    </div>
+@endforeach

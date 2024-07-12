@@ -17,9 +17,7 @@ class AuthController
 
     function postLogin(LoginRequest $req): RedirectResponse
     {
-        $body = $req->validated();
-
-        if (!Auth::attempt($body)) {
+        if (!Auth::attempt($req->validated())) {
             return back()
                ->withErrors(["name" => "invalid name or password"])
                ->onlyInput("name");

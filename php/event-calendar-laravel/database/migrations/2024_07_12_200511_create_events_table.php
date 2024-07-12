@@ -15,11 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string("name", 200);
             $table->datetime("date");
-            $table->foreignId("category_id");
-            $table->integer("duration");
-            $table->string("location", 300);
-            $table->string("organizer", 250);
-            $table->string("image", 50);
+            $table
+                ->foreignId("category_id")
+                ->constrained()
+                ->onDelete("cascade");
+            $table->integer("duration")->default(0);
+            $table->string("location", 300)->default("");
+            $table->string("organizer", 250)->default("");
+            $table->string("image", 50)->default("");
             $table->timestamps();
         });
     }
