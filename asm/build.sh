@@ -1,3 +1,9 @@
 #/bin/bash
 
-yasm -g dwarf2 -f elf64 $1.asm -o $1.o && ld $1.o -o $1.out
+set -e
+
+f=$(basename $1 .yasm)
+
+yasm -g dwarf2 -f elf64 $1 -o $f.o
+ld $f.o -o $f
+rm $f.o
