@@ -1,0 +1,44 @@
+%define SYS_write 1
+%define SYS_exit 60
+%define STDOUT 1
+
+%macro syscall1 2
+    mov rax, %1
+    mov rdi, %2
+    syscall
+%endmacro
+
+%macro syscall3 4
+    mov rax, %1
+    mov rdi, %2
+    mov rsi, %3
+    mov rdx, %4
+    syscall
+%endmacro
+
+global _start
+
+section .data
+LF db 10
+
+section .text
+_start:
+    pop rcx ; argc
+.print_arg:
+    pop r12
+    push rcx
+.print_char:
+    syscall3 SYS_write, STDOUT, r12, 1
+
+    mov al, [r12]
+    inc r12
+
+    cmp al, 0
+    jne .print_char
+
+    syscall3 SYS_write, STDOUT, LF, 1
+
+    pop rcx
+    loop .print_arg
+
+    syscall1 SYS_exit, 0
