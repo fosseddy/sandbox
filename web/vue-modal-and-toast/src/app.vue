@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import * as Vue from "vue";
 
 import Modal from "./modal.vue";
@@ -11,7 +11,7 @@ const toast = useToast();
 
 <template>
     <button @click="open = true">open modal</button>
-    <button @click="toast.add(Math.random())">
+    <button @click="toast.add(Math.random().toString(36))">
         push message
     </button>
 

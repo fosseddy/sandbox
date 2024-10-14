@@ -1,9 +1,8 @@
-<script setup>
+<script setup lang="ts">
 import * as Vue from "vue";
 
-defineProps({open: Boolean});
-defineEmits(["close"]);
-
+defineProps<{open: boolean}>();
+defineEmits<{(e: "close"): void}>();
 </script>
 
 <template>

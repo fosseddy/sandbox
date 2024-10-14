@@ -4,7 +4,7 @@ import "./style.css";
 import {ToastProvider} from "./use-toast.js";
 import App from "./app.vue";
 
-Vue.createApp(App)
+Vue
+    .createApp(App)
     .use(ToastProvider)
     .mount("#app");
-

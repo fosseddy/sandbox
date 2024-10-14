@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import * as Vue from "vue";
 
 import {useToast} from "./use-toast.js";
